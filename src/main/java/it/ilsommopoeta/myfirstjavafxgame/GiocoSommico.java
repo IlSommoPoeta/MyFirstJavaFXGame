@@ -15,6 +15,8 @@ public class GiocoSommico extends Application {
         launch(args);
     }
     public static int n = 0;
+    public static long prev = 0;
+    public static int mousex = 0, mousey = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -24,15 +26,27 @@ public class GiocoSommico extends Application {
         primaryStage.setScene(s);
 
         GraphicsContext gc = c.getGraphicsContext2D();
+        gc.setFill(Color.RED);
         AnimationTimer t = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                gc.clearRect(0, 0, 800, 800);
-                gc.setFill(Color.RED);
-                n = n + 1;
-                gc.fillOval(n, 50, 50, 50);
+                if (now - prev > 1) {
+                    gc.clearRect(0, 0, s.getWidth(), s.getHeight());
+                    n = n + 5;
+                    gc.fillOval(mousex-25, mousey-25, 50, 50);
+                    System.out.println(((now - prev)/1000)/1000);
+                    prev = now;
+
+                }
+
             }
         };
+
+        c.setOnMouseMoved(f -> {
+            mousex = (int) f.getX();
+            mousey = (int) f.getY();
+        });
+
         t.start();
 
         primaryStage.show();
